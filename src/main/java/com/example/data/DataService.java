@@ -1,7 +1,7 @@
 package com.example.data;
 
 import com.example.data.aws.AmazonS3Service;
-import com.example.data.config.Source;
+import com.example.data.config.SourceData;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
@@ -53,7 +53,7 @@ public class DataService {
 
     private class Worker<T extends BaseDto> extends Thread {
 
-        private Source source;
+        private SourceData source;
         private Class dtoClass;
         private RepoDetails repoDetails;
         private long startTime;
@@ -63,7 +63,7 @@ public class DataService {
         private File outputFile;
 
 
-        public Worker(Source source, long startTime, long endTime, Class<T> dtoClass, List<String> users) throws IOException {
+        public Worker(SourceData source, long startTime, long endTime, Class<T> dtoClass, List<String> users) throws IOException {
             this.source = source;
             this.startTime = startTime;
             this.endTime = endTime;
@@ -74,7 +74,6 @@ public class DataService {
                     + File.separator + this.repoDetails.dbView() + "-" + date + "-" + this.source.getName() + ".csv");
             this.fields = DtoToCsv.getFields(dtoClass);
 
-            // Write columns headers into CSV file
             Files.append(DtoToCsv.getColumnNamesCsv(fields) + "\n", outputFile, Charsets.UTF_8);
         }
 
@@ -91,7 +90,7 @@ public class DataService {
                 log.error("Error processing " + source.getName() + "_" + dtoClass.getSimpleName(), e);
             }
 
-            log.info(String.format("Finished processing data for the source: %s and dbView: %s with %d records",
+            log.info(String.format("Data Processing Finished  for the source: %s and dbView: %s with %d records",
                     source.getName(), repoDetails.dbView(), recordCount));
 
             amazonS3Service.uploadFileToS3Bucket(outputFile.getName(), repoDetails.s3Dir(), outputFile);

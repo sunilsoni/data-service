@@ -21,18 +21,18 @@ import java.util.List;
 
 @Configuration
 public class DataSourceConfiguration {
-    public static final TypeReference<List<Source>> typeRef = new TypeReference<List<Source>>() {
+    public static final TypeReference<List<SourceData>> typeRef = new TypeReference<List<SourceData>>() {
     };
     @Autowired
     private ApplicationContext applicationContext;
     private ObjectMapper objectMapper = new ObjectMapper();
-    private List<Source> sources;
+    private List<SourceData> sources;
 
     @PostConstruct
     public void init() throws IOException {
         ConfigurableListableBeanFactory beanFactory = ((ConfigurableApplicationContext) applicationContext).getBeanFactory();
-        sources = objectMapper.readValue(Resources.getResource("sources.json"), typeRef);
-        for (Source source : sources) {
+        sources = objectMapper.readValue(Resources.getResource("data-sources.json"), typeRef);
+        for (SourceData source : sources) {
             DataSource dataSource = DataSourceBuilder
                     .create()
                     .username(source.getUsername())

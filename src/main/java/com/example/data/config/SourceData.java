@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class Source {
+public class SourceData {
     private String name;
     private String host;
     private int port;
