@@ -41,7 +41,6 @@ public class DataService {
         this.emailRecipients = emailRecipients;
         this.localDataDir = localDataDir;
         this.objectMapper = new ObjectMapper();
-        ;
         this.date = date;
     }
 
@@ -102,3 +101,4 @@ public class DataService {
         }
     }
 }
+

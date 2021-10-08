@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
 import com.zaxxer.hikari.HikariDataSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.ApplicationContext;
@@ -23,10 +22,16 @@ import java.util.List;
 public class DataSourceConfiguration {
     public static final TypeReference<List<SourceData>> typeRef = new TypeReference<List<SourceData>>() {
     };
-    @Autowired
+
     private ApplicationContext applicationContext;
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private ObjectMapper objectMapper;
     private List<SourceData> sources;
+
+    public DataSourceConfiguration(ApplicationContext applicationContext, ObjectMapper objectMapper, List<SourceData> sources) {
+        this.applicationContext = applicationContext;
+        this.objectMapper = new ObjectMapper();
+        this.sources = sources;
+    }
 
     @PostConstruct
     public void init() throws IOException {
