@@ -31,15 +31,15 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Component
 public class DataService {
-    int queueSize;
-    int poolSize;
     private final AmazonS3Service amazonS3Service;
     private final HBaseClient HBaseClient;
-    private String date;
     private final String emailRecipients;
     private final String localDataDir;
     private final ObjectMapper objectMapper;
     private final DateTimeFormatter printFormat;
+    int queueSize;
+    int poolSize;
+    private String date;
 
     public DataService(AmazonS3Service amazonS3Service, HBaseClient HBaseClient, @Value("${queue.size:4}") int queueSize, @Value("${pool.size:2}") int poolSize, @Value("${email.recipients:a@test.com}") String emailRecipients, @Value("${local.data.dir}") String localDataDir, ObjectMapper objectMapper, String date) {
         this.amazonS3Service = amazonS3Service;
@@ -86,11 +86,11 @@ public class DataService {
         private final SourceData source;
         private final Class dtoClass;
         private final DatabaseDetails repoDetails;
-        private long startTime;
         private final long endTime;
         private final List<String> users;
         private final Map<String, Field> fields;
         private final File outputFile;
+        private long startTime;
 
 
         public SingleProcessingWorker(SourceData source, long startTime, long endTime, Class<T> dtoClass, List<String> users) throws IOException {

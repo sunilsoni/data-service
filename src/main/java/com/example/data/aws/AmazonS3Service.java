@@ -17,10 +17,9 @@ import java.io.File;
 @Service
 public class AmazonS3Service {
 
+    private final AmazonS3 amazonS3;
     @Value("${aws.s3.data.bucket}")
     private String awsS3CcDataBucket;
-
-    private final AmazonS3 amazonS3;
 
     @Autowired
     public AmazonS3Service(Region awsRegion, AWSCredentialsProvider awsCredentialsProvider) {
