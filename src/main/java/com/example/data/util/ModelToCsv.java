@@ -17,7 +17,7 @@ public class ModelToCsv {
         boolean firstFieldAdded = false;
         for (Map.Entry<String, Field> entry : fields.entrySet()) {
             String fieldName = entry.getKey();
-            String methodName = null;
+            String methodName;
             if ("boolean".equals(entry.getValue().getType().getName())) {
                 methodName = "is" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
             } else {
@@ -62,7 +62,7 @@ public class ModelToCsv {
         Class<?> parentClass = startClass.getSuperclass();
 
         if (parentClass != null &&
-                (exclusiveParent == null || !(parentClass.equals(exclusiveParent)))) {
+                (!(parentClass.equals(exclusiveParent)))) {
             List<Field> parentClassFields =
                     (List<Field>) getFieldsUpTo(parentClass, exclusiveParent);
             currentClassFields.addAll(parentClassFields);

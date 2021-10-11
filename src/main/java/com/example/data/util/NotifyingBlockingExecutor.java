@@ -15,7 +15,7 @@ public class NotifyingBlockingExecutor extends ThreadPoolExecutor {
                 poolSize,
                 keepAliveTime,
                 keepAliveTimeUnit,
-                new ArrayBlockingQueue<Runnable>(Math.max(poolSize, queueSize)),
+                new ArrayBlockingQueue<>(Math.max(poolSize, queueSize)),
                 new BlockThenRunPolicy(maxBlockingTime, maxBlockingTimeUnit, blockingTimeCallback));
         super.allowCoreThreadTimeOut(true);
     }
@@ -26,7 +26,7 @@ public class NotifyingBlockingExecutor extends ThreadPoolExecutor {
                 poolSize,
                 keepAliveTime,
                 unit,
-                new ArrayBlockingQueue<Runnable>(Math.max(poolSize, queueSize)),
+                new ArrayBlockingQueue<>(Math.max(poolSize, queueSize)),
                 new BlockThenRunPolicy());
 
         super.allowCoreThreadTimeOut(true);
@@ -37,10 +37,7 @@ public class NotifyingBlockingExecutor extends ThreadPoolExecutor {
         tasksInProcess.incrementAndGet();
         try {
             super.execute(task);
-        } catch (RuntimeException e) {
-            tasksInProcess.decrementAndGet();
-            throw e;
-        } catch (Error e) {
+        } catch (RuntimeException | Error e) {
             tasksInProcess.decrementAndGet();
             throw e;
         }
@@ -114,16 +111,15 @@ public class NotifyingBlockingExecutor extends ThreadPoolExecutor {
                         if (workQueue.offer(task, maxBlockingTime, maxBlockingTimeUnit)) {
                             taskSent = true;
                         } else {
-                            Boolean result = null;
+                            Boolean result;
                             try {
                                 result = blockingTimeCallback.call();
                             } catch (Exception e) {
                                 throw new RejectedExecutionException(e);
                             }
-                            if (result == false) {
+                            if (!result) {
                                 throw new RejectedExecutionException("User decided to stop waiting for task insertion");
                             } else {
-                                continue;
                             }
                         }
 
@@ -132,14 +128,14 @@ public class NotifyingBlockingExecutor extends ThreadPoolExecutor {
                         taskSent = true;
                     }
                 } catch (InterruptedException e) {
-
+                    e.printStackTrace();
                 }
             }
         }
 
     }
 
-    private class Synchronizer {
+    private static class Synchronizer {
 
         private final Lock lock = new ReentrantLock();
         private final Condition done = lock.newCondition();
@@ -171,7 +167,7 @@ public class NotifyingBlockingExecutor extends ThreadPoolExecutor {
 
         public boolean await(long timeout, TimeUnit timeUnit) throws InterruptedException {
 
-            boolean await_result = false;
+            boolean await_result;
             lock.lock();
             boolean localIsDone;
             try {

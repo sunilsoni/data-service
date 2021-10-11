@@ -20,7 +20,7 @@ import java.util.List;
 
 @Configuration
 public class DataSourceConfiguration {
-    public static final TypeReference<List<SourceData>> typeRef = new TypeReference<List<SourceData>>() {
+    public static final TypeReference<List<SourceData>> typeRef = new TypeReference<>() {
     };
 
     private ApplicationContext applicationContext;

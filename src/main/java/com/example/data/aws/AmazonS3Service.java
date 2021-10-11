@@ -20,7 +20,7 @@ public class AmazonS3Service {
     @Value("${aws.s3.data.bucket}")
     private String awsS3CcDataBucket;
 
-    private AmazonS3 amazonS3;
+    private final AmazonS3 amazonS3;
 
     @Autowired
     public AmazonS3Service(Region awsRegion, AWSCredentialsProvider awsCredentialsProvider) {

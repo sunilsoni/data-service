@@ -18,7 +18,7 @@ import java.io.IOException;
 @Slf4j
 @RestController
 public class DataController {
-    private DataService dataService;
+    private final DataService dataService;
     private DateTimeFormatter dtf;
 
     public DataController(DataService dataService) {

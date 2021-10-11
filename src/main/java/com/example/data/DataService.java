@@ -33,13 +33,13 @@ import java.util.concurrent.TimeUnit;
 public class DataService {
     int queueSize;
     int poolSize;
-    private AmazonS3Service amazonS3Service;
-    private HBaseClient HBaseClient;
+    private final AmazonS3Service amazonS3Service;
+    private final HBaseClient HBaseClient;
     private String date;
-    private String emailRecipients;
-    private String localDataDir;
-    private ObjectMapper objectMapper;
-    private DateTimeFormatter printFormat;
+    private final String emailRecipients;
+    private final String localDataDir;
+    private final ObjectMapper objectMapper;
+    private final DateTimeFormatter printFormat;
 
     public DataService(AmazonS3Service amazonS3Service, HBaseClient HBaseClient, @Value("${queue.size:4}") int queueSize, @Value("${pool.size:2}") int poolSize, @Value("${email.recipients:a@test.com}") String emailRecipients, @Value("${local.data.dir}") String localDataDir, ObjectMapper objectMapper, String date) {
         this.amazonS3Service = amazonS3Service;
@@ -83,14 +83,14 @@ public class DataService {
 
     private class SingleProcessingWorker<T extends BaseModel> extends Thread {
 
-        private SourceData source;
-        private Class dtoClass;
-        private DatabaseDetails repoDetails;
+        private final SourceData source;
+        private final Class dtoClass;
+        private final DatabaseDetails repoDetails;
         private long startTime;
-        private long endTime;
-        private List<String> users;
-        private Map<String, Field> fields;
-        private File outputFile;
+        private final long endTime;
+        private final List<String> users;
+        private final Map<String, Field> fields;
+        private final File outputFile;
 
 
         public SingleProcessingWorker(SourceData source, long startTime, long endTime, Class<T> dtoClass, List<String> users) throws IOException {
@@ -109,7 +109,7 @@ public class DataService {
 
         public void run() {
             log.info(String.format("Starting to process data for the source: %s, startTime: %s and dbView: %s",
-                    source.getName(), new Date(startTime).toString(), repoDetails.dbView()));
+                    source.getName(), new Date(startTime), repoDetails.dbView()));
             long recordCount = 0L;
             try {
                 while (this.startTime < this.endTime) {
